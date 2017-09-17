@@ -54,7 +54,7 @@ class Portfolio(models.Model):
 
 class Investor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    portfolio = models.OneToOneField(Portfolio)
+    portfolio = models.OneToOneField(Portfolio, related_name='investor')
 
     def __str__(self):
         return 'Investor: {}'.format(self.user.username)
@@ -62,4 +62,7 @@ class Investor(models.Model):
 
 class Broker(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    portfolios = models.ManyToManyField(Portfolio)
+    portfolios = models.ManyToManyField(Portfolio, related_name='broker')
+
+    def __str__(self):
+        return 'Broker: {}'.format(self.user.username)

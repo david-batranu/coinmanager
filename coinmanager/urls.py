@@ -14,8 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.conf.urls import include
 from django.contrib import admin
+
+from rest_framework import routers
+from coinmanager import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'investors', views.InvestorViewSet)
+router.register(r'brokers', views.BrokerViewSet)
+router.register(r'portfolios', views.PortfolioViewSet)
+router.register(r'exchanges', views.ExchangeViewSet)
+router.register(r'investor-exchanges', views.InvestorExchangeViewSet)
+router.register(r'symbols', views.SymbolViewSet)
+router.register(r'balances', views.BalanceViewSet)
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
