@@ -6,30 +6,13 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email')
+        fields = ('url', 'username', 'email', 'portfolio', 'portfolios')
 
 
-class InvestorSerializer(serializers.HyperlinkedModelSerializer):
+class SymbolSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = models.Investor
-        fields = ('user', 'portfolio')
-
-
-class BrokerSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.HyperlinkedRelatedField(
-        queryset=models.Broker.objects.all(),
-        view_name='broker-detail'
-    )
-    class Meta:
-        model = models.Broker
-        fields = ('id', 'user', 'portfolios')
-
-
-class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = models.Portfolio
-        fields = ('investor', 'exchanges', 'balances')
+        model = models.Symbol
+        fields = ('key', 'label')
 
 
 class ExchangeSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,19 +21,19 @@ class ExchangeSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('name', 'url', 'api_url')
 
 
-class InvestorExchangeSerializer(serializers.HyperlinkedModelSerializer):
+class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        view_name='portfolio-detail'
+    )
+
     class Meta:
-        model = models.InvestorExchange
-        fields = ('exchange', 'api_key', 'secret')
+        model = models.Portfolio
+        fields = ('id', 'investor', 'broker', 'balances')
 
 
 class BalanceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Balance
-        fields = ('amount', 'symbol', 'exchange')
+        fields = ('portfolio', 'exchange', 'amount', 'symbol')
 
-
-class SymbolSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = models.Symbol
-        fields = ('key', 'label')

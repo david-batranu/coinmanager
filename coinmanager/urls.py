@@ -22,11 +22,8 @@ from coinmanager import views
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
-router.register(r'investors', views.InvestorViewSet)
-router.register(r'brokers', views.BrokerViewSet)
 router.register(r'portfolios', views.PortfolioViewSet)
 router.register(r'exchanges', views.ExchangeViewSet)
-router.register(r'investor-exchanges', views.InvestorExchangeViewSet)
 router.register(r'symbols', views.SymbolViewSet)
 router.register(r'balances', views.BalanceViewSet)
 
