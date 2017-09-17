@@ -1,3 +1,6 @@
+""" Serializers needed for the REST API.
+"""
+
 from django.contrib.auth.models import User
 from coinmanager import models
 from rest_framework import serializers
@@ -36,4 +39,3 @@ class BalanceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Balance
         fields = ('portfolio', 'exchange', 'amount', 'symbol')
-

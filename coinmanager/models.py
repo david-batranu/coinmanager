@@ -1,8 +1,14 @@
+""" Models
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Symbol(models.Model):
+    """ Symbols used to display coins.
+    """
     key = models.CharField(max_length=10)
     label = models.CharField(max_length=10)
 
@@ -11,6 +17,8 @@ class Symbol(models.Model):
 
 
 class Exchange(models.Model):
+    """ Generic information about an exchange.
+    """
     name = models.CharField(max_length=100)
     url = models.CharField(max_length=100, blank=True)
     api_url = models.CharField(max_length=255, blank=True)
@@ -20,7 +28,9 @@ class Exchange(models.Model):
 
 
 class Portfolio(models.Model):
-    investor = models.OneToOneField(User, related_name='portfolio')
+    """ A user (investor) portfolio, managed by another user (broker).
+    """
+    investor = models.OneToOneField(User, related_name='portfolio') # type: User
     broker = models.ForeignKey(
         User, related_name='portfolios', null=True, blank=True)
 
@@ -28,12 +38,14 @@ class Portfolio(models.Model):
         investor = self.investor.username
         try:
             broker = self.broker.username
-        except Broker.DoesNotExist:
+        except ObjectDoesNotExist:
             broker = 'Nobody'
         return 'Portfolio for {} managed by {}.'.format(investor, broker)
 
 
 class ExchangeSecrets(models.Model):
+    """ Secret keys for each portfolio exchange.
+    """
     portfolio = models.ForeignKey(Portfolio, related_name='exchanges')
     exchange = models.ForeignKey(Exchange)
 
@@ -48,6 +60,8 @@ class ExchangeSecrets(models.Model):
 
 
 class Balance(models.Model):
+    """ Storage for funds from various portfolio exchanges.
+    """
     portfolio = models.ForeignKey(Portfolio, related_name='balances')
     exchange = models.ForeignKey(Exchange)
 
@@ -60,4 +74,3 @@ class Balance(models.Model):
             self.symbol.label,
             self.exchange.name
         )
-
